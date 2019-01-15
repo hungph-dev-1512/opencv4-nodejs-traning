@@ -2,7 +2,6 @@ const path = require('path')
 const fs = require('fs')
 const {
   fr,
-  drawRects,
   getAppdataPath,
   ensureAppdataDirExists
 } = require('./commons')
@@ -15,7 +14,7 @@ const trainedModelFilePath = path.resolve(getAppdataPath(), trainedModelFile)
 
 const dataPath = path.resolve('./examples/data')
 const facesPath = path.resolve(dataPath, 'faces')
-const classNames = ['sheldon', 'lennard', 'raj', 'howard', 'stuart']
+const classNames = ['hung', 'howard']
 
 const detector = fr.FaceDetector()
 const recognizer = fr.FaceRecognizer()
@@ -25,12 +24,12 @@ if (!fs.existsSync(trainedModelFilePath)) {
   const allFiles = fs.readdirSync(facesPath)
   const imagesByClass = classNames.map(c =>
     allFiles
-      .filter(f => f.includes(c))
-      .map(f => path.join(facesPath, f))
-      .map(fp => fr.loadImage(fp))
+    .filter(f => f.includes(c))
+    .map(f => path.join(facesPath, f))
+    .map(fp => fr.loadImage(fp))
   )
 
-  imagesByClass.forEach((faces, label) => 
+  imagesByClass.forEach((faces, label) =>
     recognizer.addFaces(faces, classNames[label])
   )
 
@@ -48,21 +47,3 @@ const bbtThemeImgs = fs.readdirSync(dataPath)
   .filter(f => f.includes('bbt'))
   .map(f => path.join(dataPath, f))
   .map(fp => fr.loadImage(fp))
-
-// bbtThemeImgs.forEach((_img, i) => {
-//   let img = _img
-
-//   // resize image if too small
-//   const minPxSize = 400000
-//   if ((img.cols * img.rows) < minPxSize) {
-//     img = fr.resizeImage(img, minPxSize / (img.cols * img.rows))
-//   }
-
-//   console.log('detecting faces for query image')
-//   const faceRects = detector.locateFaces(img).map(res => res.rect)
-//   const faces = detector.getFacesFromLocations(img, faceRects, 150)
-
-  // const win = new fr.ImageWindow()
-  // win.setImage(img)
-  // drawRects(win, faceRects)
-// })

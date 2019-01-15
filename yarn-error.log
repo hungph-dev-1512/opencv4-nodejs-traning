@@ -1,0 +1,39 @@
+Arguments: 
+  /home/hungphamhoang/.nvm/versions/node/v8.14.0/bin/node /usr/share/yarn/bin/yarn.js add segfault-handler
+
+PATH: 
+  /home/hungphamhoang/.virtualenvs/cv/bin:/home/hungphamhoang/.nvm/versions/node/v8.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.12.3
+
+Node version: 
+  8.14.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: EACCES: permission denied, mkdir '/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/bindings'
+
+npm manifest: 
+  {
+    "name": "first_app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "face-recognition": "^0.9.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

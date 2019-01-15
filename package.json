@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "face-recognition": "^0.9.4"
+    "face-recognition": "^0.9.4",
+    "opencv4nodejs": "^4.14.0"
   }
 }

@@ -1,0 +1,18 @@
+PID 17363 received SIGSEGV for address: 0x1
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(+0x2ed7)[0x7f5becafbed7]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f5c2943d890]
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(_Z22segfault_stack_frame_1v+0x24)[0x7f5becafbf84]
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(+0x2455)[0x7f5becafb455]
+node(_ZN2v88internal25FunctionCallbackArguments4CallEPFvRKNS_20FunctionCallbackInfoINS_5ValueEEEE+0x193)[0xa96423]
+node[0xb0d64c]
+node(_ZN2v88internal21Builtin_HandleApiCallEiPPNS0_6ObjectEPNS0_7IsolateE+0xaf)[0xb0e29f]
+[0x399242c842fd]
+PID 18031 received SIGSEGV for address: 0x1
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(+0x2ed7)[0x7f08c71c1ed7]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x12890)[0x7f08fd889890]
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(_Z22segfault_stack_frame_1v+0x24)[0x7f08c71c1f84]
+/home/hungphamhoang/Documents/opencv_nodejs_workspace/first_app/node_modules/segfault-handler/build/Release/segfault-handler.node(+0x2455)[0x7f08c71c1455]
+node(_ZN2v88internal25FunctionCallbackArguments4CallEPFvRKNS_20FunctionCallbackInfoINS_5ValueEEEE+0x11f)[0x55bf028b7d0f]
+node(+0x538b62)[0x55bf02920b62]
+node(+0x5390af)[0x55bf029210af]
+[0x3eb47ce840bd]
