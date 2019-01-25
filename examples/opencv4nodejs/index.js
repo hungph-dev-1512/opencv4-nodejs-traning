@@ -2,7 +2,9 @@ const cv = require("opencv4nodejs");
 const path = require("path");
 const fs = require("fs");
 const fr = require("face-recognition").withCv(cv);
-const { getAppdataPath } = require("../commons");
+const {
+  getAppdataPath
+} = require("../commons");
 
 const trainedModelFile = "faceRecognition2Model_150.json";
 const trainedModelFilePath = path.resolve(getAppdataPath(), trainedModelFile);
@@ -71,24 +73,36 @@ grabFrames = (videoFile, delay, onFrame) => {
   }, 0);
 };
 
-global.flagsIn = new Array();
-flagsIn["hung"] = 0;
-flagsIn["howard"] = 0;
-global.flagsOut = new Array();
-flagsOut["hung"] = 1;
-flagsOut["howard"] = 1;
-global.facesCount = 0;
+
+// global.flagsTimestamp = new Array();
+// flagsTimestamp["hung"] = 0;
+// flagsTimestamp["howard"] = 0;
+// global.facesCount = 0;
+// global.timeIn = 0;
+// global.timeOut = 0;
+global.timeIn = new Array();
+timeIn["hung"] = 0;
+timeIn["howard"] = 0;
+global.timeOut = new Array();
+timeOut["hung"] = 0;
+timeOut["howard"] = 0;
 
 runVideoFaceDetection = (src, detectFaces) =>
   grabFrames(src, 10, frame => {
+    global.flagsDetect = new Array();
+    flagsDetect["hung"] = 0;
+    flagsDetect["howard"] = 0;
+
     // console.time("detection time");
     const frameResized = frame.resizeToMax(800);
     // detect faces
     const faceRects = detectFaces(frameResized);
     if (faceRects.length) {
-      facesCount = faceRects.length;
       faceRects.forEach(faceRect => {
-        const { rect, face } = faceRect;
+        const {
+          rect,
+          face
+        } = faceRect;
         const cvFace = fr.CvImage(face);
         const prediction = recognizer.predictBest(cvFace);
         const text = `${prediction.className} (${prediction.distance})`;
@@ -96,48 +110,68 @@ runVideoFaceDetection = (src, detectFaces) =>
         // draw Rect
         drawRectWithText(frameResized, faceRect.rect, text, blue);
         // log timestamp
-        if (!flagsIn[prediction.className]) {
-          flagsIn[prediction.className] = new Date()
-            .toISOString()
-            .replace(/T/, " ")
-            .replace(/\..+/, "");
-          flagsOut[prediction.className] = 0;
+        if (!timeIn[prediction.className]) {
+          timeIn[prediction.className] = new Date();
         }
+        if (timeOut[prediction.className]) {
+          timeOut[prediction.className] = 0;
+        }
+        flagsDetect[prediction.className] = 1;
       });
     } else {
-      facesCount = faceRects.length;
-      if (flagsIn["hung"]) {
-        console.log(
-          "* ---|------------|--------------------------------|---------------------------- *"
-        );
-        console.log(
-          "* 1  |    hung    |      " +
-            flagsIn["hung"] +
-            "       |     " +
-            new Date()
-              .toISOString()
+      if (timeOut['hung']) {
+        let seconds = (new Date().getTime() - timeOut['hung'].getTime()) / 1000;
+        if (seconds > 10) {
+          if ((timeOut['hung'].getTime() - timeIn['hung'].getTime()) > 10) {
+            console.log(
+              "* ---|------------|--------------------------------|---------------------------- *"
+            );
+            console.log(
+              "* 1  |    hung    |      " +
+              timeIn['hung'].toISOString()
               .replace(/T/, " ")
               .replace(/\..+/, "") +
-            "     *"
-        );
-        flagsIn["hung"] = 0;
-      }
-      if (flagsIn["howard"]) {
-        console.log(
-          "* ---|------------|--------------------------------|---------------------------- *"
-        );
-        console.log(
-          "* 2  |   howard   |      " +
-            flagsIn["howard"] +
-            "       |     " +
-            new Date()
-              .toISOString()
+              "       |     " +
+              timeOut['hung'].toISOString()
               .replace(/T/, " ")
               .replace(/\..+/, "") +
-            "     *"
-        );
-        flagsIn["howard"] = 0;
+              "     *"
+            );
+            timeIn['hung'] = 0;
+            timeOut['hung'] = 0;
+          }
+        }
       }
+      if (timeOut['howard']) {
+        let seconds = (new Date().getTime() - timeOut['howard'].getTime()) / 1000;
+        if (seconds > 10) {
+          if ((timeOut['howard'].getTime() - timeIn['howard'].getTime()) > 10) {
+            console.log(
+              "* ---|------------|--------------------------------|---------------------------- *"
+            );
+            console.log(
+              "* 1  |   howard   |      " +
+              timeIn['howard'].toISOString()
+              .replace(/T/, " ")
+              .replace(/\..+/, "") +
+              "       |     " +
+              timeOut['howard'].toISOString()
+              .replace(/T/, " ")
+              .replace(/\..+/, "") +
+              "     *"
+            );
+            timeIn['howard'] = 0;
+            timeOut['howard'] = 0;
+          }
+        }
+      }
+    }
+
+    if (!flagsDetect["hung"] && timeIn["hung"] && !timeOut["hung"]) {
+      timeOut["hung"] = new Date();
+    }
+    if (!flagsDetect["howard"] && timeIn["howard"] && !timeOut["howard"]) {
+      timeOut["howard"] = new Date();
     }
     // });
     cv.imshow("face detection", frameResized);
@@ -155,7 +189,10 @@ function detectFaces(img) {
     scaleFactor: 1.2,
     minNeighbors: 10
   };
-  const { objects, map } = classifier.detectMultiScale(
+  const {
+    objects,
+    map
+  } = classifier.detectMultiScale(
     img.bgrToGray(),
     options
   );
